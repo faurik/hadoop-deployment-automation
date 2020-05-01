@@ -1,0 +1,17 @@
+- name: Reload daemons
+  systemd:
+    daemon_reload: yes
+
+- name: Restart resourcemanager
+  systemd:
+    name: resourcemanager
+    state: restarted
+    enabled: yes
+  ignore_errors: yes
+
+- name: Restart nodemanager
+  systemd:
+    name: nodemanager
+    state: restarted
+    enabled: yes
+  ignore_errors: yes

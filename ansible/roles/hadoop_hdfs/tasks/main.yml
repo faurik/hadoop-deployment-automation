@@ -1,0 +1,43 @@
+- name: Put core-site.xml
+  template:
+    src: core-site.j2.xml
+    dest: "{{ hadoop_home }}/etc/hadoop/core-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart datanode
+    - Restart journalnode
+    - Restart namenode
+    - Restart zkfc
+
+- name: Put hdfs-site.xml
+  template:
+    src: hdfs-site.j2.xml
+    dest: "{{ hadoop_home }}/etc/hadoop/hdfs-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart datanode
+    - Restart journalnode
+    - Restart namenode
+    - Restart zkfc
+
+- name: Configure datanode
+  include_tasks: configure_datanode.yml
+  when: inventory_hostname in datanodes
+
+- name: Configure journalnode
+  include_tasks: configure_journalnode.yml
+  when: inventory_hostname in journalnodes
+
+- name: Ensure if journalnodes started
+  systemd:
+    name: journalnode
+    state: started
+  when: inventory_hostname in journalnodes
+
+- name: Configure namenode
+  include_tasks: configure_namenode.yml
+  when: inventory_hostname in namenodes

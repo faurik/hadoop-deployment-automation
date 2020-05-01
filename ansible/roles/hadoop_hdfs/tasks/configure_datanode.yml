@@ -1,0 +1,25 @@
+- name: Configure firewalld
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "9864/tcp"
+    - "9866/tcp"
+    - "9867/tcp"
+
+- name: Create directory
+  file:
+    path: "{{ datanode_datadir }}"
+    state: directory
+    mode: '0755'
+
+- name: Put systemd unit for datanode
+  template:
+    src: "datanode.j2.service"
+    dest: "/etc/systemd/system/datanode.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons

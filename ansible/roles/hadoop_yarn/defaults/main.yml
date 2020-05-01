@@ -1,0 +1,5 @@
+rms: []
+nms: []
+zookeeper_nodes: []
+
+cluster_name: "bigdata"

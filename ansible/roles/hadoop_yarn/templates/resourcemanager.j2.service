@@ -1,0 +1,14 @@
+[Unit]
+Description=resourcemanager
+After=network.target
+
+[Service]
+Type=forking
+OOMScoreAdjust=-1000
+ExecStart={{ hadoop_home }}/sbin/yarn-daemon.sh start resourcemanager
+ExecStop={{ hadoop_home }}/sbin/yarn-daemon.sh stop resourcemanager
+TimeoutSec=300
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

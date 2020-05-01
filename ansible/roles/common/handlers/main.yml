@@ -1,0 +1,11 @@
+- name: Disable chronyd
+  systemd:
+    name: chronyd
+    state: stopped
+    enabled: no
+
+- name: Enable ntpd
+  systemd:
+    name: ntpd
+    state: started
+    enabled: yes

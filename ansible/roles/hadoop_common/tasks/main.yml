@@ -1,0 +1,33 @@
+- name: Check if Hadoop exists
+  stat:
+    path: "{{ hadoop_home }}"
+  register: p
+
+- name: Download and install Hadoop
+  block:
+    - name: Download Apache Hadoop
+      get_url:
+        url: "{{ hadoop_url }}"
+        dest: "/opt/"
+
+    - name: Unpack Hadoop archive
+      unarchive:
+        src: "/opt/hadoop-{{ hadoop_version }}.tar.gz"
+        dest: "/opt/"
+        remote_src: yes
+  # run only when directory with given version of Hadoop is not present on the server
+  when: p.stat.isdir is not defined or not p.stat.isdir
+
+- name: Put env script to profile.d
+  template:
+    src: hadoop.j2.sh
+    dest: /etc/profile.d/hadoop.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Put hadoop-env.sh
+  template:
+    src: hadoop-env.j2.sh
+    dest: "/opt/hadoop-3.2.1/etc/hadoop/hadoop-env.sh"
+    mode: '0644'

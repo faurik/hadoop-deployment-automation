@@ -1,0 +1,24 @@
+- name: Configure firewalld
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "8480/tcp"
+    - "8485/tcp"
+
+- name: Create directory
+  file:
+    path: "{{ journalnode_datadir }}"
+    state: directory
+    mode: '0755'
+
+- name: Put systemd unit for journalnode
+  template:
+    src: "journalnode.j2.service"
+    dest: "/etc/systemd/system/journalnode.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons

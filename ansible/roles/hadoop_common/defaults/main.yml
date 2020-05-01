@@ -1,0 +1,3 @@
+hadoop_version: '3.2.1'
+hadoop_url: 'https://apache-mirror.rbc.ru/pub/apache/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz'
+hadoop_home: "/opt/hadoop-{{ hadoop_version }}"

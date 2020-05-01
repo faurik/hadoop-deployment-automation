@@ -1,0 +1,85 @@
+- name: Configure firewalld
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "9870/tcp"
+    - "8020/tcp"
+
+- name: Create directory
+  file:
+    path: "{{ namenode_datadir }}"
+    state: directory
+    mode: '0755'
+
+- name: Put systemd unit for namenode
+  template:
+    src: "namenode.j2.service"
+    dest: "/etc/systemd/system/namenode.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons
+
+- name: Put systemd unit for zkfc
+  template:
+    src: "zkfc.j2.service"
+    dest: "/etc/systemd/system/zkfc.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons
+
+- name: Ensure if namenode is formatted
+  block:
+    - name: Check if namenode is formatted
+      find:
+        paths: "{{ namenode_datadir }}"
+        file_type: any
+        hidden: yes
+      register: filesFound
+      failed_when: filesFound.matched == 0
+
+  rescue:
+    - name: Format namenode
+      shell: "{{ hadoop_home }}/bin/hdfs namenode -format"
+
+    - name: Run active namenode
+      systemd:
+        name: namenode
+        state: started
+
+    - name: Remember initialization as fact
+      set_fact:
+        is_init: true
+
+    - name: Remember active namenode
+      set_fact:
+        active_namenode: inventory_hostname
+  run_once: true
+
+- name: Prepare standby namenodes
+  block:
+    - name: Bootstrap standby namenodes
+      shell: "{{ hadoop_home }}/bin/hdfs namenode -bootstrapStandby"
+
+    - name: Run standby namenode
+      systemd:
+        name: namenode
+        state: started
+  when:
+    - is_init == true
+    - active_namenode != inventory_hostname
+
+- name: Ensure if ZKFC is formatted
+  block:
+    - name: Format ZKFC
+      shell: "{{ hadoop_home }}/bin/hdfs zkfc -formatZK"
+
+    - name: Start ZKFC
+      systemd:
+        name: zkfc
+        state: started
+  when: is_init == true

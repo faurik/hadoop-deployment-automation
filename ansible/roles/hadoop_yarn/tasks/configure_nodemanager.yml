@@ -1,0 +1,8 @@
+- name: Put systemd unit for nodemanager
+  template:
+    src: "nodemanager.j2.service"
+    dest: "/etc/systemd/system/nodemanager.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons

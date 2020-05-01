@@ -1,0 +1,21 @@
+- name: Configure firewalld
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "8088/tcp"
+    - "8030/tcp"
+    - "8031/tcp"
+    - "8032/tcp"
+    - "8033/tcp"
+
+- name: Put systemd unit for resourcemanager
+  template:
+    src: "resourcemanager.j2.service"
+    dest: "/etc/systemd/system/resourcemanager.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload daemons

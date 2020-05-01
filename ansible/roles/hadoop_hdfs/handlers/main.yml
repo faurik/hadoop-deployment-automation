@@ -1,0 +1,31 @@
+- name: Reload daemons
+  systemd:
+    daemon_reload: yes
+
+- name: Restart datanode
+  systemd:
+    name: datanode
+    state: restarted
+    enabled: yes
+  ignore_errors: yes
+
+- name: Restart journalnode
+  systemd:
+    name: journalnode
+    state: restarted
+    enabled: yes
+  ignore_errors: yes
+
+- name: Restart namenode
+  systemd:
+    name: namenode
+    state: restarted
+    enabled: yes
+  ignore_errors: yes
+
+- name: Restart zkfc
+  systemd:
+    name: zkfc
+    state: restarted
+    enabled: yes
+  ignore_errors: yes

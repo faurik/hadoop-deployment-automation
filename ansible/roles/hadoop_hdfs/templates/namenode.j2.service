@@ -1,0 +1,13 @@
+[Unit]
+Description=namenode
+After=network.target
+
+[Service]
+Type=forking
+OOMScoreAdjust=-1000
+ExecStart={{ hadoop_home }}/sbin/hadoop-daemon.sh start namenode
+ExecStop={{ hadoop_home }}/sbin/hadoop-daemon.sh stop namenode
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

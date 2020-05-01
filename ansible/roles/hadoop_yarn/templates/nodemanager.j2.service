@@ -1,0 +1,13 @@
+[Unit]
+Description=nodemanager
+After=network.target
+
+[Service]
+Type=forking
+OOMScoreAdjust=-1000
+ExecStart={{ hadoop_home }}/sbin/yarn-daemon.sh start nodemanager
+ExecStop={{ hadoop_home }}/sbin/yarn-daemon.sh stop nodemanager
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

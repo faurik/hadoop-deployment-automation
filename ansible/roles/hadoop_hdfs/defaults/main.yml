@@ -1,0 +1,14 @@
+namenodes: []
+datanodes: []
+journalnodes: []
+zookeeper_nodes: []
+
+datanode_datadir: "/hadoop/data"
+journalnode_datadir: "/hadoop/journal"
+namenode_datadir: "/hadoop/name"
+
+cluster_name: "bigdata"
+
+ssh_key_path: "/root/.ssh/id_rsa"
+
+is_init: false
