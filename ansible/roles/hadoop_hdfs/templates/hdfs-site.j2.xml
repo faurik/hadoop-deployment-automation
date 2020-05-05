@@ -36,23 +36,23 @@
     <property>
         <name>dfs.ha.namenodes.{{ cluster_name }}</name>
         <!-- generate list like this: node-1,node-2,node-3 -->
-        <value>{% for node in namenodes %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+        <value>{% for node in namenodes %}{{ hostvars[node]['ansible_host'] }}{% if not loop.last %},{% endif %}{% endfor %}</value>
     </property>
 
 {% for node in namenodes %}
     <property>
-        <name>dfs.namenode.rpc-address.{{ cluster_name }}.{{ node }}</name>
-        <value>{{ node }}:8020</value>
+        <name>dfs.namenode.rpc-address.{{ cluster_name }}.{{ hostvars[node]['ansible_host'] }}</name>
+        <value>{{ hostvars[node]['ansible_host'] }}:8020</value>
     </property>
     <property>
-        <name>dfs.namenode.http-address.{{ cluster_name }}.{{ node }}</name>
-        <value>{{ node }}:9870</value>
+        <name>dfs.namenode.http-address.{{ cluster_name }}.{{ hostvars[node]['ansible_host'] }}</name>
+        <value>{{ hostvars[node]['ansible_host'] }}:9870</value>
     </property>
 {% endfor %}
 
     <property>
         <name>dfs.namenode.shared.edits.dir</name>
-        <value>qjournal://{% for node in journalnodes %}{{ node }}:8485{% if not loop.last %};{% endif %}{% endfor %}/{{ cluster_name }}</value>
+        <value>qjournal://{% for node in journalnodes %}{{ hostvars[node]['ansible_host'] }}:8485{% if not loop.last %};{% endif %}{% endfor %}/{{ cluster_name }}</value>
     </property>
     <property>
         <name>dfs.client.failover.proxy.provider.{{ cluster_name }}</name>

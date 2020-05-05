@@ -27,17 +27,17 @@
     </property>
     <property>
         <name>yarn.resourcemanager.ha.rm-ids</name>
-        <value>{% for node in rms %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+        <value>{% for node in rms %}{{ hostvars[node]['ansible_host'] }}{% if not loop.last %},{% endif %}{% endfor %}</value>
     </property>
 
 {% for node in rms %}
     <property>
-        <name>yarn.resourcemanager.hostname.{{ node }}</name>
-        <value>{{ node }}</value>
+        <name>yarn.resourcemanager.hostname.{{ hostvars[node]['ansible_host'] }}</name>
+        <value>{{ hostvars[node]['ansible_host'] }}</value>
     </property>
     <property>
-        <name>yarn.resourcemanager.webapp.address.{{ node }}</name>
-        <value>{{ node }}:8088</value>
+        <name>yarn.resourcemanager.webapp.address.{{ hostvars[node]['ansible_host'] }}</name>
+        <value>{{ hostvars[node]['ansible_host'] }}:8088</value>
     </property>
 {% endfor %}
     <property>
