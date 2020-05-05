@@ -50,6 +50,7 @@
       systemd:
         name: namenode
         state: started
+        enabled: yes
 
     - name: Remember initialization as fact
       set_fact:
@@ -69,6 +70,7 @@
       systemd:
         name: namenode
         state: started
+        enabled: yes
   when:
     - is_init == true
     - active_namenode != inventory_hostname
@@ -77,9 +79,10 @@
   block:
     - name: Format ZKFC
       shell: "{{ hadoop_home }}/bin/hdfs zkfc -formatZK"
-
-    - name: Start ZKFC
-      systemd:
-        name: zkfc
-        state: started
   when: is_init == true
+
+- name: Ensure if ZKFC is started
+  systemd:
+    name: zkfc
+    state: started
+    enabled: yes

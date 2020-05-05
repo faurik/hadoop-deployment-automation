@@ -36,6 +36,7 @@
   systemd:
     name: journalnode
     state: started
+    enabled: yes
   when: inventory_hostname in journalnodes
 
 - name: Configure namenode
