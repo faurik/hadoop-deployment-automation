@@ -69,3 +69,9 @@
     group: root
     mode: '0644'
   notify: Reload daemons
+
+- name: Ensure if zookeeper is started
+  systemd:
+    name: zookeeper
+    state: started
+    enabled: yes
