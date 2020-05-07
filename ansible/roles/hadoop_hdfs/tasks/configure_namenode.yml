@@ -1,3 +1,8 @@
+- name: Install psmisc for SSH fencing
+  yum:
+    name: psmisc
+    state: latest
+
 - name: Configure firewalld
   firewalld:
     port: "{{ item }}"
