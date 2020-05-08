@@ -8,6 +8,7 @@ OOMScoreAdjust=-1000
 ExecStart={{ hadoop_home }}/sbin/hadoop-daemon.sh start datanode
 ExecStop={{ hadoop_home }}/sbin/hadoop-daemon.sh stop datanode
 TimeoutSec=300
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
